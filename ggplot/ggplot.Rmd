@@ -351,6 +351,16 @@ b
 
 More details at the [cookbook snipped for ordering factors ](http://www.cookbook-r.com/Manipulating_data/Changing_the_order_of_levels_of_a_factor/)
 
+### Adding more layers 
+
+Sometimes it makes sense to add ggplot2 geometries to a graph you already have. geom_jitter() is a good example. From our boxplot we can add that points that contribute to it, staggered over the plot so they do not overlap. 
+ 
+```{r}
+b + geom_jitter()
+```
+
+
+
 
 ### Problems with overlays and advantages of the long format
 
@@ -380,6 +390,7 @@ The melt function has correctly guessed that we want to use Species as the varab
 
  melt(data, id.vars=c("Col1", "Col2"))
 
+NOTE: The "gather()" function from tidyverse can also be used.
 
 Let's rename the variable column to something sensible.
 ```{r} 
@@ -413,6 +424,14 @@ Use the ggplotly function to get an interactive plot
 
 ```{r} 
 ggplotly(p)
+```
+By default the mouse over text is what is mapped in the aesthetics. You can change this using the tooltip() function within plotly and giving some false aesthetics to enable more data to be accessible by tooltip. 
+
+```{r}
+q<- p+ geom_point(aes(pl=Petal.Length, pw= Petal.Width))
+#now you can use either the false aesthetic or its name
+ggplotly(q, tooltip=c("Species", "Petal.Length", "pw") )
+# bit of a hack but it works...
 ```
 
 Plot.ly graphs can be used locally, or online either through a shiny server (you need to use renderPlotly and plotlyOutput) or using plot.ly's servers to get a URL (details on their web page).
