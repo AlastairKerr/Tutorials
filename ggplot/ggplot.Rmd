@@ -1,10 +1,33 @@
 ---
 title: "ggplot2 tutorial"
 output: html_document
-version: 0.2
+author: |
+  | Alastair Kerr^1^
+  |  
+  | 1. Manager, WTCCB Bioinformatics Core Facility, University of Edinburgh
+  | 
+version: 0.3
 ---
 
-### Library Install and Usage
+# Outline 
+
+The ggplot2 (grammar for graphics) package provides a flexible and powerful set of functions that, even with default settings, can provide useful and visually appealing graphics. However for a beginner, the wealth of options can be overwhelming. The goal of this tutorial is to help you learn the basic syntax of each element you need to add, to create a professional looking graph. Useful libraries that provide additional functionality are also introduced.
+
+## Learning Objectives
+
+By the end of the tutorial, you'll be able to:
+
+* Create and save basic graphics
+* Understand how to create different types of graphics by applying geometries
+* Apply additional layers to the graphic
+* Visually subset the graphic by applying fills and gradients 
+* Change the appearance of the graphic by using themes
+* Create sub-graphics by applying facets 
+* Understand the reason and methods to change the underlying dataframe to a tidy (long) format
+* Use additional libraries such as plotly to enhance the utility of the graphic. 
+
+
+# Library Install and Usage
 
 Libraries provide additional functions, and the packages that they are present in can be downloaded from a network of servers called the Comprehensive R Archive Network [CRAN].
 
@@ -32,7 +55,7 @@ devtools::install_github('baptiste/egg')
 I had trouble on my windows laptop when R was installed in the default "Program Files".  I removed it and reinstalled it to a directory without spaces to enable this command to work. 
 
 To use libraries from the various packages, use the "library" function.
-```{r}
+```{r eval=FALSE}
 library(ggplot2)
 library(ggthemes)
 library(ggsci)
@@ -48,7 +71,7 @@ These are the packages that we will use today. We will be mostly using ggplot2 a
 ### Fisher's Iris dataset (pre-installed in R)
 ![iris](Pictures/iris.png)
 
-Fisher examined the length and width of the petals and sepals in irises to determine a classification algorithm. Here we will explore the relationship between species and the dimension of the flowers via the ggplot2 plotting package.  Fisher’s data is stored as a built in data set in R.  Too see the data type 
+Fisher examined the length and width of the petals and sepals in irises to determine a classification algorithm. Here we will explore the relationship between species and the dimension of the flowers via the ggplot2 plotting package.  Fisher’s data is stored as a built in data set in R.  To see the data type 
 
 ```{r, eval=FALSE}
 iris
@@ -66,6 +89,24 @@ data(iris)
 head(iris)
 ```
 
+Note that this is a data frame. A data frame is a collection of vectors that can be accessed using the vector name or the column number. e.g. 
+```{r eval=FALSE}
+iris$Sepal.Length 
+# or 
+iris[,1]
+```
+
+This data frame has two types of data, continuous and discrete.
+ 
+```{r}
+str(iris)
+```
+The continuous data is of type number and the distrete data is of type factor, which can be one of the 3 species 
+
+```{r}
+levels(iris$Species)
+```
+
 
 ### ggplot2 overview
 
@@ -79,7 +120,7 @@ ggplot2 is a suite of functions that create a “grammar” for creating graphs.
 
 First let's define the dataframe to use 
 ```{r}
-p <- ggplot(iris) 
+p <- ggplot(data=iris) 
 ```
 
 At this stage you can also define what columns to plot within the dataframe by using the aesthetics function, aes(). If you do this, it will be default for the whole graph. You can also define the aesthetics later within specific layers. 
@@ -92,7 +133,7 @@ names(iris)
 
 Let us plot “Sepal.Length" vs "Sepal.Width" and store it in an object "p"
 ```{r}
-p <- ggplot(iris, aes(x=Sepal.Length, y=Sepal.Width) )
+p <- ggplot(data=iris, aes(x=Sepal.Length, y=Sepal.Width) )
 ```
 
 Note that we still need to add layers to this plot, 
@@ -112,16 +153,15 @@ So "p"" now contains the data and a geometry layer. Now we can plot a graph!
 p
 ```
 
-Note that each layer you add will inherit the attributes from the first layer. Aesthetics cannot be overwritten and you may want to assigned them later in the geometries. Therefore the following should not give you what you expect.
+Note that each layer you add will inherit the attributes from the first layer. Aesthetics can be overwritten but you may want to assigned them later in the geometries for clarity. Note the following:
 
 ```{r}
-p + geom_point(aes(x=Petal.Length, y=Petal.Width))
+ggplot(data=iris, aes(x=Sepal.Length, y=Sepal.Width) ) + geom_point(aes(x=Petal.Length, y=Petal.Width)) 
 ```
-But the following works
 
-```{r}
-ggplot(iris) + geom_point(aes(x=Petal.Length, y=Petal.Width))
-```
+Although here is no geometry for the 1st set of data, the labels are used but the data has been overwritten using the aesthetics in the geometry.
+
+
 Lets go back to our object "p" with septal length versus septal width
 
 We can colour the points in the geometry.
@@ -130,14 +170,14 @@ p <- p + geom_point(colour="red")
 p
 ```
 
-Not very informative though, let’s start again and colour the points by species.
+Not very informative though, let’s start again and colour the points by species. Note as well that the data, x and y labels are also not neccessary if the data is in the correct order (but label names will aid in the clarity of your code). 
 
 ```{r}
-p <- ggplot(iris, aes(x=Sepal.Length, y=Sepal.Width, colour=Species) ) +  geom_point()
+p <- ggplot(iris, aes(Sepal.Length, Sepal.Width, colour=Species) ) +  geom_point()
 p
 ```
 
-Each function within the ggplot package has it own help file associated with it.
+Each function within the ggplot package has its own help file associated with it.
 ```{r, eval=FALSE}
 ?geom_point()
 ```
@@ -161,6 +201,16 @@ h<- ggplot(iris, aes(Sepal.Length/Sepal.Width, fill=Species )) +geom_histogram(b
 h
 ```
 
+Another example using the violin geometry. Here we are using the  "group" aesthetic to turn continous data into discrete levels. (Note that the fill here is only useful for boxes that  contain a single factor type).
+
+```{r}
+b<- ggplot(data=iris) +  
+  geom_violin(aes(x=Sepal.Length, 
+                  group=cut_width(Sepal.Length, 0.5), 
+                  y=Sepal.Width, 
+                  fill=Species))
+b
+```
 
 ### Changing the theme
 
@@ -174,8 +224,12 @@ We can continue to modify the plot. Let’s make the axis a bit prettier with th
 
 ```{r, error=T}
 p <- p + xlab('Sepal length') + ylab('Sepal width') 
+p
 ```
-All the characteristics of the plot, such as text size and the background are managed by the function called theme()
+All the characteristics of the plot, such as text size and the background are managed by the function called theme().  To see what a theme can change: 
+```{r}
+?theme
+```
 
 You can use a theme with predefined defaults
 ```{r}
@@ -311,6 +365,13 @@ q + facet_grid(~Species)
 
 In this case facet_wrap() would have produced an identical plot. The syntax facet_grid(factorY ~ factorX) will produce an X by Y grid with all factorY values down one side and all factorX values along the other. If data is missing for pairs of factors, a blank graph will be produced. facet_wrap() does not constrain the multiple plots into a grid and instead just creates all plots that have data. 
 
+We can also tell facet wrap to print in a certain number of columns.  Using our histogram, h, from before.
+
+```{r}
+h  + facet_wrap(~Species, ncol=1) 
+```
+
+
 ### Additional functions 
 
 The boxplot geometry needs the x value to be a factor. If we try and plot it the wrong way, it will not work correctly. 
@@ -366,14 +427,14 @@ b + geom_jitter()
 
 Say we want to plot all values per species as a boxplot. 
 
-As stated earlier, defaults are generated early as we add data to the plot. Also it is difficult to interact with the layers to make the plot look nice. 
+As stated earlier, defaults are generated early as we add data to the plot. Also it is difficult to interact with the layers to make the plot look nice, even if we add some opacity using an alpha value.
 
 ```{r}
 d <- ggplot(iris)
-b1 <- geom_boxplot(aes(x=Species, y=Sepal.Length))
-b2 <- geom_boxplot(aes(x=Species, y=Sepal.Width))
-b3 <- geom_boxplot(aes(x=Species, y=Petal.Width))
-b4 <- geom_boxplot(aes(x=Species, y=Petal.Length))
+b1 <- geom_boxplot(aes(x=Species, y=Sepal.Length, alpha=0.5))
+b2 <- geom_boxplot(aes(x=Species, y=Sepal.Width, alpha=0.5))
+b3 <- geom_boxplot(aes(x=Species, y=Petal.Width, alpha=0.5))
+b4 <- geom_boxplot(aes(x=Species, y=Petal.Length, alpha=0.5))
 d + b1 +b2 + b3 + b4
 ```
 
@@ -428,9 +489,9 @@ ggplotly(p)
 By default the mouse over text is what is mapped in the aesthetics. You can change this using the tooltip() function within plotly and giving some false aesthetics to enable more data to be accessible by tooltip. 
 
 ```{r}
-q<- p+ geom_point(aes(pl=Petal.Length, pw= Petal.Width))
+p2<- p+ geom_point(aes(pl=Petal.Length, pw= Petal.Width))
 #now you can use either the false aesthetic or its name
-ggplotly(q, tooltip=c("Species", "Petal.Length", "pw") )
+ggplotly(p2, tooltip=c("Species", "Petal.Length", "pw") )
 # bit of a hack but it works...
 ```
 
@@ -438,14 +499,13 @@ Plot.ly graphs can be used locally, or online either through a shiny server (you
 
 ### R-Studio Add-ins 
 
-The latest version of R-studio has some useful addins.  "ggExtra" has the ggMarginal function that allows you to add plots to the margins of the your plot. 
+The latest version of R-studio has some useful addins.  "ggExtra" has the ggMarginal function that allows you to add probability density plots to the margins of the your plot. 
 ```{r}
 library(ggExtra)
 ggMarginal(p)
 ```
 
-Lets change the theme so that the legend is not in the way and then change the plot to a histogram rather then a line density. 
-
+Lets change the theme so that the legend is not in the way and then change the margin plot to a histogram. 
 ```{r}
 ggMarginal(p + theme_fivethirtyeight(), type="histogram", binwidth=0.1)
 ```
