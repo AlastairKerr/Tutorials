@@ -36,7 +36,7 @@ Installing  packages:
 #install.packages(“PACKAGENAME”)
 #Today we will use the following packages
 #Please ensure that are installed before attending the session
-install.packages(c("ggplot2", "ggthemes", "ggsci", "reshape2", "plotly","ggExtra"))
+install.packages(c("ggplot2", "ggthemes", "ggsci", "reshape2", "plotly","ggExtra", "svglite"))
 ```
 
 CRAN packages as well as many biology specific “Bioconductor” packages can be installed using bioconductor.
@@ -63,6 +63,7 @@ library(reshape2)
 library(plotly)
 library(ggExtra)
 library(egg)
+library(svglite)
 ```
 
 These are the packages that we will use today. We will be mostly using ggplot2 and touch on the functionality of the other packages.
