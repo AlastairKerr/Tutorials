@@ -202,14 +202,17 @@ h<- ggplot(iris, aes(Sepal.Length/Sepal.Width, fill=Species )) +geom_histogram(b
 h
 ```
 
-Another example using the violin geometry. Here we are using the  "group" aesthetic to turn continous data into discrete levels. (Note that the fill here is only useful for boxes that  contain a single factor type).
+Another example using the violin geometry. Here we are using the "group" aesthetic to turn continous data into discrete levels.
 
 ```{r}
-b<- ggplot(data=iris) +  
-  geom_violin(aes(x=Sepal.Length, 
-                  group=cut_width(Sepal.Length, 0.5), 
-                  y=Sepal.Width, 
-                  fill=Species))
+Sepal.Length.Groups <- cut_width( iris$Sepal.Length, 0.5 )
+b <- ggplot(data = iris) +  
+  geom_violin( aes( x = Sepal.Length, y = Sepal.Width, 
+                    group = Sepal.Length.Groups,
+                    fill = Sepal.Length.Groups ) ) +
+  labs( fill = "Sepal length intervals", 
+        x = "Sepal length", 
+        y = "Sepal width" )
 b
 ```
 
