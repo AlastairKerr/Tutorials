@@ -306,7 +306,7 @@ q
 
 To change the colours we need use another suite of functions which are not unique to ggplot2. There are several options and we will go through a few examples.
 
-Lets first look at a function from  colorbrewer.org.  Details can be found [here](http://docs.ggplot2.org/dev/scale_brewer.html). 
+Lets first look at a function from  [colorbrewer2.org](http://colorbrewer2.org/).  Details can be found [here](http://docs.ggplot2.org/dev/scale_brewer.html). 
 
 In this package continuous scales use scale_color_distiller() function whereas discrete factors can scale_colour_hue.
 
