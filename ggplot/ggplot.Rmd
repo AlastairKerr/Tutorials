@@ -149,21 +149,21 @@ The key layer to define is the geometry of the plot. There are many geometries t
 p <- p + geom_point()
 ```
 
-So "p"" now contains the data and a geometry layer. Now we can plot a graph! 
+So "p" now contains the data and a geometry layer. Now we can plot a graph! 
 ```{r}
 p
 ```
 
-Note that each layer you add will inherit the attributes from the first layer. Aesthetics can be overwritten but you may want to assigned them later in the geometries for clarity. Note the following:
+Note that each layer you add will inherit the attributes from the first layer. Aesthetics can be overwritten but you may want to assign them later in the geometries for clarity. Note the following:
 
 ```{r}
 ggplot(data=iris, aes(x=Sepal.Length, y=Sepal.Width) ) + geom_point(aes(x=Petal.Length, y=Petal.Width)) 
 ```
 
-Although here is no geometry for the 1st set of data, the labels are used but the data has been overwritten using the aesthetics in the geometry.
+Although there is no geometry for the 1st set of data, the labels are used but the data has been overwritten using the aesthetics in the geometry.
 
 
-Lets go back to our object "p" with septal length versus septal width
+Lets go back to our object "p" with sepal length versus septal width
 
 We can colour the points in the geometry.
 ```{r}
@@ -223,12 +223,13 @@ Recap:
 p <- ggplot(iris, aes(x=Sepal.Length, y=Sepal.Width, colour=Species) ) +  geom_point() 
 ```
 
+
 We can continue to modify the plot. Let’s make the axis a bit prettier with the xlab() and ylab() functions 
+
 ```{r, error=T}
 p <- p + xlab('Sepal length') + ylab('Sepal width') 
 p
 ```
-
 All the characteristics of the plot, such as text size and the background are managed by the function called theme().  To see what a theme can change: 
 ```{r}
 ?theme
@@ -270,10 +271,12 @@ h + theme_for_nature
 Note that theme() changes the underlying graph properties and not the layers themselves. 
 
 There are pre-computed themes availabe, R-studio will offer help choosing them by offering choices after typing "theme_". There are other packages available to download such as the ggthemes package. Here is one based on https://fivethirtyeight.com/ .
+
 ```{r}
 library(ggthemes)
 h + theme_fivethirtyeight()
 ```
+
 
 
 ### Saving the plots 
@@ -304,7 +307,7 @@ q <- ggplot(iris, aes(x=Petal.Length, y=Petal.Width, colour=Sepal.Length/Sepal.W
 q
 ```
 
-To change the colours we need use another suite of functions which are not unique to ggplot2. There are several options and we will go through a few examples.
+To change the colours we need to use another suite of functions which are not unique to ggplot2. There are several options and we will go through a few examples.
 
 Lets first look at a function from  [colorbrewer2.org](http://colorbrewer2.org/).  Details can be found [here](http://docs.ggplot2.org/dev/scale_brewer.html). 
 
@@ -462,7 +465,7 @@ library(reshape2)
 iris.long <- melt(iris)
 head(iris.long)
 ```
-The melt function has correctly guessed that we want to use Species as the varable keep for the identifier. If we have multiple columns to wanted to keep, we could use the id.vars argument, eg  
+The melt function has correctly guessed that we want to use Species as the varable keep for the identifier. If we have multiple columns we wanted to keep, we could use the id.vars argument, e.g.  
 
  melt(data, id.vars=c("Col1", "Col2"))
 
@@ -514,7 +517,7 @@ Plot.ly graphs can be used locally, or online either through a shiny server (you
 
 ### R-Studio Add-ins 
 
-The latest version of R-studio has some useful addins.  "ggExtra" has the ggMarginal function that allows you to add probability density plots to the margins of the your plot. 
+The latest version of R-studio has some useful addins.  "ggExtra" has the ggMarginal function that allows you to add probability density plots to the margins of your plot. 
 ```{r}
 library(ggExtra)
 ggMarginal(p)
