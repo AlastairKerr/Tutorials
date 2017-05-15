@@ -364,7 +364,21 @@ Multiple plots can easily be generated if we have one or two factors by which to
 q + facet_grid(~Species)
 ```
 
-In this case facet_wrap() would have produced an identical plot. The syntax facet_grid(factorY ~ factorX) will produce an X by Y grid with all factorY values down one side and all factorX values along the other. If data is missing for pairs of factors, a blank graph will be produced. facet_wrap() does not constrain the multiple plots into a grid and instead just creates all plots that have data. 
+In this case facet_wrap() would have produced an identical plot. The syntax facet_grid(factorY ~ factorX) will produce an X by Y grid with all factorY values down one side and all factorX values along the other. For instance:
+
+```{r}
+Countries <- c("Italy", "Spain", "France", "UK")
+
+IrisDataWithCountries <- iris
+IrisDataWithCountries$Country <- sample(Countries, nrow(iris), replace = TRUE)
+
+q <- ggplot(IrisDataWithCountries, aes(x = Petal.Length, 
+                                       y = Petal.Width, 
+                                       colour = Sepal.Length/Sepal.Width ) ) + geom_point() 
+q + facet_grid(Country ~ Species)
+```
+
+If data is missing for pairs of factors, a blank graph will be produced. facet_wrap() does not constrain the multiple plots into a grid and instead just creates all plots that have data. 
 
 We can also tell facet wrap to print in a certain number of columns.  Using our histogram, h, from before.
 
