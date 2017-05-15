@@ -223,13 +223,12 @@ Recap:
 p <- ggplot(iris, aes(x=Sepal.Length, y=Sepal.Width, colour=Species) ) +  geom_point() 
 ```
 
-
 We can continue to modify the plot. Let’s make the axis a bit prettier with the xlab() and ylab() functions 
-
 ```{r, error=T}
 p <- p + xlab('Sepal length') + ylab('Sepal width') 
 p
 ```
+
 All the characteristics of the plot, such as text size and the background are managed by the function called theme().  To see what a theme can change: 
 ```{r}
 ?theme
@@ -271,12 +270,10 @@ h + theme_for_nature
 Note that theme() changes the underlying graph properties and not the layers themselves. 
 
 There are pre-computed themes availabe, R-studio will offer help choosing them by offering choices after typing "theme_". There are other packages available to download such as the ggthemes package. Here is one based on https://fivethirtyeight.com/ .
-
 ```{r}
 library(ggthemes)
 h + theme_fivethirtyeight()
 ```
-
 
 
 ### Saving the plots 
