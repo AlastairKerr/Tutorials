@@ -172,11 +172,17 @@ p
 ```
 
 Not very informative though, let’s start again and colour the points by species. Note as well that the data, x and y labels are also not neccessary if the data is in the correct order (but label names will aid in the clarity of your code). 
-
 ```{r}
 p <- ggplot(iris, aes(Sepal.Length, Sepal.Width, colour=Species) ) +  geom_point()
 p
 ```
+
+Also we can use the aes_string() function at any time in place of aes(). The only difference is that the column names need to be in inverted commas. This also allows the use of variables containing the name. i.e.
+```{r}
+sw <- "Sepal.Width"
+ggplot(iris, aes_string("Sepal.Length", sw, colour="Species") ) +  geom_point()
+```
+
 
 Each function within the ggplot package has its own help file associated with it.
 ```{r, eval=FALSE}
@@ -303,7 +309,7 @@ In this you can also set the resolution for the image as well as the length and 
 As we have seen, points (and bars) can be coloured by a value in your dataframe using the aes() function. Earlier we coloured by a factor but we can also colour by a value which will create a gradient of colour. 
 Lets look at the Petals this time and colour by the ratio of Sepal.Length to Sepal.Width.
 ```{r}
-q <- ggplot(iris, aes(x=Petal.Length, y=Petal.Width, colour=Sepal.Length/Sepal.Width )) +  geom_point() 
+q <- ggplot(iris, aes(x=Petal.Length, y=Petal.Width, colour=Sepal.Length/Sepal.Width )) +  geom_point(alpha=0.5) 
 q
 ```
 
