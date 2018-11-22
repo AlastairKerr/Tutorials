@@ -1,0 +1,58 @@
+---
+title: "Interrogate plumber"
+output: html_notebook
+---
+```{bash}
+curl "http://129.215.15.86:8123/lookup?key=A"
+```
+
+## Via the R httr package 
+
+```{r}
+library(httr)
+r = GET("http://129.215.15.86:8123/lookup?key=A")
+content(r)
+str(content(r))
+
+```
+
+# Calls to 2 mounted instances  
+
+```{bash}
+curl "http://129.215.15.86:8123/level1/lookup?key=Z"
+```
+
+```{bash}
+curl "http://129.215.15.86:8123/level2/lookup?key=Z"
+```
+
+```{bash}
+curl "http://129.215.15.86:8123/level2/lookup?key=Z"
+```
+
+
+```{bash}
+curl "http://129.215.15.86:8123/box?key=Z"
+```
+```{bash}
+curl "http://129.215.15.86:8123/noBox?key=Z"
+```
+
+## Box json
+```{r}
+library(httr)
+r = GET("http://129.215.15.86:8123/box?key=A")
+content(r)
+str(content(r))
+```
+
+## no box json
+```{r}
+library(httr)
+r = GET("http://129.215.15.86:8123/noBox?key=A")
+content(r)
+str(content(r))
+```
+
+
+
